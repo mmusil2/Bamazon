@@ -25,7 +25,10 @@ connection.connect(function(err) {
 function showProducts() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
-        console.log(res);
+        // console.log(res);
+        for (i=0; i < res.length; i++) {
+            console.log("ID: " + res[i].item_id + " || Product: " + res[i].product_name + " || Price: " + res[i].price);
+        }
         buyProduct();
         // connection.end();
     });
@@ -49,10 +52,24 @@ function buyProduct () {
                 // console.log(res[0].stock_quantity);
                 if (units > res[0].stock_quantity) {
                     console.log("Insufficient quantity!");
+                    connection.end();
                 } else {
-                    // *********************************************************
-                    // ******** CONNECTION UPDATE AND CONSOLE.LOG COST**********
-                    // *********************************************************
+                    connection.query("UPDATE products SET ? WHERE ?",
+                        [
+                            {
+                                stock_quantity: res[0].stock_quantity - units
+                            },
+                            {
+                                item_id: id
+                            }
+                        ],
+                        function(error) {
+                            if (error) throw err;
+                            console.log("Purchase complete");
+                            console.log("You paid: $" + res[0].price * units);
+                            connection.end();
+                        }
+                    );
                 }
             }
         )
