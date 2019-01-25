@@ -23,4 +23,10 @@ VALUES ("Nintendo Switch", "Video Games", 300, 20),
 ("Blade Runner 2049", "Movies", 17.50, 4665),
 ("Metal Gear Solid", "Video Games", 49.81, 344);
 
+
+SELECT * FROM products GROUP BY stock_quantity HAVING count(*) < 5;
+
+SELECT * FROM products WHERE stock_quantity < 5;
+
+
 SELECT * FROM products;

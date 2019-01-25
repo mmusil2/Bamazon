@@ -82,7 +82,7 @@ function addInv() {
                 choices: function() {
                     var choiceArray = [];
                     for (i=0; i < res.length; i++) {
-                        choiceArray.push("ID: " + res[i].item_id + " || Product: " + res[i].product_name + " || Price: " + res[i].price + " || Quantity: " + res[i].stock_quantity);
+                        choiceArray.push(res[i].product_name);
                     }
                     return choiceArray;
                 },
@@ -95,16 +95,16 @@ function addInv() {
             }
         ]).then(function(answer) {
             var chosenItem;
+            console.log(answer.choice);
             for (i=0; i < res.length; i++) {
-                if (res[i].item_name === answer.choice) {
+                if (res[i].product_name === answer.choice) {
                     chosenItem = res[i];
                 }
             }
-
             connection.query("UPDATE products SET ? WHERE ?",
                 [
                     {
-                        stock_quantity: chosenItem.stock_quantity + answer.amount
+                        stock_quantity: parseInt(chosenItem.stock_quantity) + parseInt(answer.amount)
                     },
                     {
                         item_id: chosenItem.item_id
@@ -112,13 +112,50 @@ function addInv() {
                 ],
                 function(error) {
                     if (error) throw error;
-                    console.log(chosenItem);
                     runOptions();
                 }
             );
-            // console.log("working?");
-
         });
 
+    });
+}
+
+function addProduct() {
+    inquirer.prompt([
+        {
+            name: "product_name",
+            type: "input",
+            message: "Enter the name of the product"
+        },
+        {
+            name: "department_name",
+            type: "input",
+            message: "Enter the department of the product"
+        },
+        {
+            name: "price",
+            type: "input",
+            message: "Enter the price of the product"
+        },
+        {
+            name: "stock_quantity",
+            type: "input",
+            message: "Enter the starting stock quantity"
+        }
+    ]).then(function(answer) {
+        connection.query(
+            "INSERT INTO products SET ?",
+            {
+                product_name: answer.product_name,
+                department_name: answer.department_name,
+                price: answer.price,
+                stock_quantity: answer.stock_quantity
+            },
+            function(err) {
+                if (err) throw err;
+                console.log("Successfully added");
+                runOptions();
+            }
+        );
     });
 }
