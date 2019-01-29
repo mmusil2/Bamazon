@@ -35,5 +35,29 @@ SELECT * FROM products;
 CREATE TABLE departments (
 	department_id INTEGER NOT NULL AUTO_INCREMENT,
     department_name VARCHAR (50) NULL,
-    over_head_costs DECIMAL (10,2)
+    over_head_costs DECIMAL (10,2),
+    PRIMARY KEY (department_id)
 );
+
+SELECT * FROM departments;
+
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("Video Games", 300),
+("Food", 80),
+("Auto", 200),
+("Food", 25),
+("Supplements", 30),
+("Instruments", 74),
+("Alcohol", 36),
+("Movies", 22);
+
+
+ALTER TABLE products
+ADD product_sales DECIMAL (10,2);
+
+
+UPDATE products SET product_sales = 0 WHERE item_id = 3;
+
+
+SELECT departments.department_id, departments.department_name, departments.over_head_costs, products.product_sales
+FROM departments INNER JOIN products ON (departments.department_name = products.department_name)
