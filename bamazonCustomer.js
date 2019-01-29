@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+var Table = require('cli-table2');
 var inquirer = require("inquirer");
 var mysql = require("mysql");
 var keys = require("./keys.js");
@@ -26,9 +27,16 @@ function showProducts() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
         // console.log(res);
+        var table = new Table({
+            head: ["item_id", "product_name", "price"],
+            // colWidths: [100, 200]
+        });
+
         for (i=0; i < res.length; i++) {
-            console.log("ID: " + res[i].item_id + " || Product: " + res[i].product_name + " || Price: " + res[i].price);
+            // console.log("ID: " + res[i].item_id + " || Product: " + res[i].product_name + " || Price: " + res[i].price);
+            table.push([res[i].item_id, res[i].product_name, res[i].price])
         }
+        console.log(table.toString());
         buyProduct();
         // connection.end();
     });
@@ -66,6 +74,19 @@ function buyProduct () {
                         function(error) {
                             if (error) throw err;
                             console.log("Purchase complete");
+                            connection.query("UPDATE products SET ? WHERE?",
+                                [
+                                    {
+                                        product_sales: res[0].product_sales + res[0].price * units
+                                    },
+                                    {
+                                        item_id: id
+                                    }
+                                ],
+                                function(error) {
+                                    if (error) throw err;
+                                }
+                            );
                             console.log("You paid: $" + res[0].price * units);
                             connection.end();
                         }
