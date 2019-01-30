@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+var Table = require('cli-table2');
 var inquirer = require("inquirer");
 var mysql = require("mysql");
 var keys = require("./keys.js");
@@ -54,9 +55,17 @@ function productSearch() {
     connection.query("SELECT * FROM products", function(err, res) {
         if (err) throw err;
         // console.log(res);
+
+        var table = new Table({
+            head: ["item_id", "product_name", "price", "quantity"],
+            // colWidths: [100, 200]
+        });
+
         for (i=0; i < res.length; i++) {
-            console.log("ID: " + res[i].item_id + " || Product: " + res[i].product_name + " || Price: " + res[i].price + " || Quantity: " + res[i].stock_quantity);
+            table.push([res[i].item_id, res[i].product_name, res[i].price, res[i].stock_quantity])
         }
+        console.log(table.toString());
+
         runOptions();
         // connection.end();
     });
@@ -65,9 +74,17 @@ function productSearch() {
 function lowInv() {
     connection.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, res) {
         if (err) throw err;
+
+        var table = new Table({
+            head: ["item_id", "product_name", "price", "quantity"],
+            // colWidths: [100, 200]
+        });
+
         for (i=0; i < res.length; i++) {
-            console.log("ID: " + res[i].item_id + " || Product: " + res[i].product_name + " || Price: " + res[i].price + " || Quantity: " + res[i].stock_quantity);
+            table.push([res[i].item_id, res[i].product_name, res[i].price, res[i].stock_quantity])
         }
+        console.log(table.toString());
+
         runOptions();
     });
 }
