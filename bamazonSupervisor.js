@@ -63,5 +63,29 @@ function viewSales() {
 }
 
 function newDept() {
-    
+    inquirer.prompt([
+        {
+            name: "department_name",
+            type: "input",
+            message: "Enter the name of the department"
+        },
+        {
+            name: "over_head_costs",
+            type: "input",
+            message: "Enter the overhead costs of the department"
+        }
+    ]).then(function(answer) {
+        connection.query(
+            "INSERT INTO departments SET ?",
+            {
+                department_name: answer.department_name,
+                over_head_costs: answer.over_head_costs
+            },
+            function(err) {
+                if (err) throw err;
+                console.log("Successfully added");
+                runOptions();
+            }
+        );
+    });
 }
