@@ -1,6 +1,6 @@
 # Bamazon
 
-[Video of App]()
+[Video of App](https://drive.google.com/file/d/17sua8XmBizFyQYc3HijLibQ3c-Il2DeS/view?usp=sharing)
 
 ## Inventory search and management Node application with input driven menus that utilizes MySql databases
 ### Uses mysql, table, and inquirer packages
