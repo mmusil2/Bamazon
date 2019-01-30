@@ -59,5 +59,6 @@ ADD product_sales DECIMAL (10,2);
 UPDATE products SET product_sales = 0 WHERE item_id = 3;
 
 
-SELECT departments.department_id, departments.department_name, departments.over_head_costs, products.product_sales
+SELECT departments.department_id, departments.department_name, departments.over_head_costs, products.product_sales, products.product_sales - departments.over_head_costs AS total_profit
 FROM departments INNER JOIN products ON (departments.department_name = products.department_name)
+GROUP BY departments.department_name
